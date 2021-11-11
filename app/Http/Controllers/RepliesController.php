@@ -27,4 +27,18 @@ class RepliesController extends Controller
 
         return redirect()->back()->with('info_unlike','You just Unliked a reply in the discussion');
     }
+
+    public function best_answer($id){
+        $reply = Reply::find($id);
+
+        $reply->best_answer = 1;
+
+        $reply->save();
+
+        $reply->user->points += 100;
+
+        $reply->user->save();
+
+        return redirect()->back()->with('mark_success','Reply has been marked as Best Answer');
+    }
 }

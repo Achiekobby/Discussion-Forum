@@ -16,11 +16,13 @@
     <div class="card-header border-primary">
         <img src="{{ $discussion->user->avatar }}" alt="" width="70" height="70"
             border-radius="50%" />&nbsp;&nbsp;&nbsp;
-        <span class="">{{ $discussion->user->name }} <b>{{ $discussion->created_at->diffForHumans() }}</b></span>
+        <span class="">{{ $discussion->user->name }}&nbsp;<span><b>({{ $discussion->user->points }} points)&nbsp;&nbsp;</b></span>  <b>{{ $discussion->created_at->diffForHumans() }}</b></span>
         @if ($discussion->watched_by_auth_user())
-            <a href="{{ route('discussion.unwatch',['id'=>$discussion->id]) }}" class="ui secondary basic button float-right"><i class="eye slash icon"></i>Unwatch</a>
+        <a href="{{ route('discussion.unwatch',['id'=>$discussion->id]) }}"
+            class="ui secondary basic button float-right"><i class="eye slash icon"></i>Unwatch</a>
         @else
-            <a href="{{ route('discussion.watch',['id'=>$discussion->id]) }}" class="ui secondary button float-right"><i class="eye icon"></i>Watch</a>
+        <a href="{{ route('discussion.watch',['id'=>$discussion->id]) }}" class="ui secondary button float-right"><i
+            class="eye icon"></i>Watch</a>
 
         @endif
     </div>
@@ -80,10 +82,21 @@
                 </a>
             </div>
             @endif
+            @if ($reply->best_answer==0 && Auth::id()==$discussion->user->id)
+                <a href="{{ route('discussion.best_answer',['id'=>$reply->id]) }}" class="ui labeled icon blue button float-right">
+                <i class="thumbs up icon"></i>
+                Mark as Best
+            </a>
+            
+            @else
+                <a class="ui teal tag label float-right">
+                    Marked as Best
+                </a>
+            @endif
         </div>
     </div>
+    <div class="ui divider"></div>
     @endforeach
-
     {{-- Reply Form --}}
     @if (Auth::check())
     <div class="card">
@@ -103,32 +116,41 @@
         </div>
     </div>
     @else
-    <div class="ui warning message">
-        <i class="inbox icon"></i>
+    <div class="ui warning icon message ">
+        <i class="exclamation icon"></i>
         <div class="header fluid">
             You must Login before you can leave reply
         </div>
-        <p>
-                <a href="{{ route('login') }}" class="ui secondary button my-3">Login</a>
-        </p>
+        
+            <a href="{{ route('login') }}" class="ui secondary button mx-5">Login</a>
+        
     </div>
     @endif
 
     @if (Session::has("reply"))
     <script>
         toastr.success("{!! Session::get('reply') !!}");
+
     </script>
     @elseif (Session::has('info_like'))
     <script>
         toastr.info("{!! Session::get('info_like') !!}");
+
     </script>
     @elseif (Session::has('info_unlike'))
     <script>
         toastr.info("{!! Session::get('info_unlike') !!}");
+
     </script>
     @elseif (Session::has('watch_success'))
     <script>
         toastr.info("{!! Session::get('watch_success') !!}");
+
+    </script>
+    @elseif (Session::has('mark_success'))
+    <script>
+        toastr.info("{!! Session::get('mark_success') !!}");
+
     </script>
     @endif
     @endsection

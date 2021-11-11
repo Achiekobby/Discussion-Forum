@@ -48,11 +48,15 @@ class DiscussionController extends Controller
             'reply' => "required"
         ]);
 
-        Reply::create([
+        $reply = Reply::create([
             'user_id' => Auth::id(),
             'discussion_id' => $id,
             'content' => $request->reply
         ]);
+
+        $reply->user->points += 25;
+
+        $reply->user->save();
 
         $watchers = array();
 
@@ -70,6 +74,6 @@ class DiscussionController extends Controller
     {
         $discussion = Discussion::where('slug', $slug)->first();
 
-        return view('discussions.show', compact('discussion',));
+        return view('discussions.show')->with('discussion',$discussion);
     }
 }

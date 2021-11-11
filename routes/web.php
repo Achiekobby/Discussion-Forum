@@ -47,4 +47,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/discussion/watch/{id}',[WatchersController::class, 'watch'])->name('discussion.watch');
 
     Route::get('/discussion/unwatch/{id}',[WatchersController::class, 'unwatch'])->name('discussion.unwatch');
+
+    Route::get('/discussion/best_answer/{id}', [RepliesController::class, 'best_answer'])->name('discussion.best_answer');
 });
