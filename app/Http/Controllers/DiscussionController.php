@@ -76,4 +76,20 @@ class DiscussionController extends Controller
 
         return view('discussions.show')->with('discussion',$discussion);
     }
+
+    public function edit($slug)
+    {
+        $discussion = Discussion::where('slug', $slug)->first();
+        return view('discussions.edit', ['discussion'=>$discussion]);
+    }
+
+    public function update(Request $request, $id){
+        $discussion = Discussion::find($id);
+
+        $discussion->content = $request->content;
+
+        $discussion->save();
+
+        return redirect()->route('discussion.show',['slug'=>$discussion->slug])->with('update', "Successfully updated the content of the discussion");
+    }
 }

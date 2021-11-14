@@ -17,8 +17,16 @@
     <div class="card-header border-primary">
         <img src="{{ $discussion->user->avatar }}" alt="" width="70" height="70"
             border-radius="50%" />&nbsp;&nbsp;&nbsp;
-        <span class="">{{ $discussion->user->name }} &nbsp;<span><b>({{ $discussion->user->points }} points)&nbsp;&nbsp;</b></span><b>{{ $discussion->created_at->diffForHumans() }}</b></span>
-        <a href="{{ route('discussion.show',['slug'=>$discussion->slug]) }}" class="ui secondary button float-right">View</a>
+        <span class="">{{ $discussion->user->name }} &nbsp;<span><b>({{ $discussion->user->points }}
+                    points)&nbsp;&nbsp;</b></span><b>{{ $discussion->created_at->diffForHumans() }}</b></span>
+        <a href="{{ route('discussion.show',['slug'=>$discussion->slug]) }}"
+            class="ui secondary button float-right">View</a>&nbsp;&nbsp;
+        @if ($discussion->hasBestAnswer())
+        <span class=" float-right ui green button mx-2">Closed</span>
+        @else
+        <span class="btn float-right ui red button mx-2">Open </span>
+        @endif
+
     </div>
     <div class="card-body">
         <h2 class="text-center">
@@ -39,10 +47,10 @@
         </div>
     </div>
 </div>
-    @endforeach
+@endforeach
 
-    <div>
-        {{ $discussions->links() }}
-    </div>
+<div>
+    {{ $discussions->links() }}
+</div>
 
-    @endsection
+@endsection

@@ -12,7 +12,7 @@
             <div class="ui form">
                 <div class="field">
                     <label>Discussion Title</label>
-                    <input type="text" name="title" id="title" placeholder="Enter Discussion Title...">
+                    <input type="text" name="title" id="title" placeholder="Enter Discussion Title..." value="{{ old('title') }}">
                 </div>
                 <div class="field">
                     <label for="channel">Choose a Channel</label>
@@ -26,7 +26,7 @@
 
                 <div class="field">
                     <label>Ask a Question</label>
-                    <textarea name="content" id="content"></textarea>
+                    <textarea name="content" id="content">{{ old('content') }}</textarea>
                 </div>
             </div>
             <button type="submit" class="ui teal button my-3">Create Discussion</button>

@@ -49,4 +49,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/discussion/unwatch/{id}',[WatchersController::class, 'unwatch'])->name('discussion.unwatch');
 
     Route::get('/discussion/best_answer/{id}', [RepliesController::class, 'best_answer'])->name('discussion.best_answer');
+
+    Route::get('/discussion/edit/{slug}',[DiscussionController::class, 'edit'])->name('discussion.edit');
+
+    Route::post('/discussion/update/{id}',[DiscussionController::class, 'update'])->name('discussion.update');
+
+    Route::get('/reply/edit/{id}',[RepliesController::class, 'edit'])->name('reply.edit');
+
+    Route::post('/reply/update/{id}',[RepliesController::class, 'update'])->name('reply.update');
 });

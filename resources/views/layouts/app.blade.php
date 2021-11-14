@@ -105,11 +105,37 @@
         </nav>
 
         <main class="py-4">
+
             <div class="container">
                 <div class="row">
                     <div class="col-md-4 mx-4">
-                        <a href="{{ route('forum')}}" class="ui red button">Home</a>
-                        <a href="{{ route('discussion.create')}}" class="positive ui button">Create new Discussion</a>
+                        <div class="ui list">
+                            <div class="item">
+                                <a href="{{ route('forum')}}" class="ui red button">Home</a>
+                            </div>
+
+                            @if (Auth::check())
+                            @if (Auth::user()->admin)
+                            <div class="item">
+                                <a href="{{ route('channels.index') }}" class="ui violet button">All Channels</a>
+                            </div>
+                            @endif
+                            @endif
+                            <div class="item">
+                                <a href="/forum?filter=me" class="ui teal button">My Discussions</a>
+                            </div>
+                            <div class="item">
+                                <a href="/forum?filter=solved" class="ui olive button">Answered Discussions</a>
+                            </div>
+                            <div class="item">
+                                <a href="/forum?filter=unsolved" class="ui yellow button">Unanswered Discussions</a>
+                            </div>
+
+                            <div class="item">
+                                <a href="{{ route('discussion.create')}}" class="positive ui button">Create new
+                                    Discussion</a>
+                            </div>
+                        </div>
                         <div class="card my-2">
                             <div class="card-header">
                                 <h2 class="ui header">
@@ -124,7 +150,8 @@
                                 <ul class="list-group">
                                     @foreach ($channels as $channel )
                                     <li class="list-group-item">
-                                        <a href="{{ route('channel.forum',['slug'=>$channel->slug]) }}" class=" fluid ui inverted secondary button">
+                                        <a href="{{ route('channel.forum',['slug'=>$channel->slug]) }}"
+                                            class=" fluid ui inverted secondary button">
                                             {{ $channel->title }}
                                         </a>
                                     </li>
@@ -134,6 +161,19 @@
                         </div>
                     </div>
                     <div class="col-md-6">
+                        @if ($errors->count()>0)
+                        <div class="ui error message">
+                            <div class="header">
+                                There were some errors with your submission
+                            </div>
+                            @foreach ($errors->all() as $error)
+                            <ul class="list">
+                                <li>{{ $error }}</li>
+                            </ul>
+                            @endforeach
+                        </div>
+                        @endif
+
                         @yield('content')
                     </div>
                 </div>

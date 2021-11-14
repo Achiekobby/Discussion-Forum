@@ -41,4 +41,22 @@ class RepliesController extends Controller
 
         return redirect()->back()->with('mark_success','Reply has been marked as Best Answer');
     }
+
+    public function edit($id){
+        return view('replies.edit',['reply'=>Reply::where('id',$id)->first()]);
+    }
+
+    public function update(Request $request, $id){
+        $reply = Reply::where('id',$id)->first();
+
+        $this->validate($request,[
+            'content'=>"required"
+        ]);
+
+        $reply->content = $request->content;
+
+        $reply->save();
+
+        return redirect()->route('discussion.show',['slug'=>$reply->discussion->slug])->with('reply_edit', "Successfully Edited the reply");
+    }
 }

@@ -16,13 +16,26 @@
     <div class="card-header border-primary">
         <img src="{{ $discussion->user->avatar }}" alt="" width="70" height="70"
             border-radius="50%" />&nbsp;&nbsp;&nbsp;
-        <span class="">{{ $discussion->user->name }}&nbsp;<span><b>({{ $discussion->user->points }} points)&nbsp;&nbsp;</b></span>  <b>{{ $discussion->created_at->diffForHumans() }}</b></span>
+        <span class="">{{ $discussion->user->name }}&nbsp;<span><b>({{ $discussion->user->points }}
+                    points)&nbsp;&nbsp;</b></span> <b>{{ $discussion->created_at->diffForHumans() }}</b></span>
+        @if (Auth::id()==$discussion->user->id)
+        @if (!$discussion->hasBestAnswer())
+        <a href="{{ route('discussion.edit',['slug'=>$discussion->slug]) }}" class="ui teal button float-right"><i
+                class="edit icon"></i>Edit Content</a>
+        @else
+        <a href="/" class="ui teal disabled button float-right"><i class="edit icon"></i>Edit Content</a>
+        @endif
+
+        @else
+        <a href="/" class="ui teal disabled button float-right"><i class="edit icon"></i>Edit Content</a>
+        @endif
+
         @if ($discussion->watched_by_auth_user())
         <a href="{{ route('discussion.unwatch',['id'=>$discussion->id]) }}"
             class="ui secondary basic button float-right"><i class="eye slash icon"></i>Unwatch</a>
         @else
         <a href="{{ route('discussion.watch',['id'=>$discussion->id]) }}" class="ui secondary button float-right"><i
-            class="eye icon"></i>Watch</a>
+                class="eye icon"></i>Watch</a>
 
         @endif
     </div>
@@ -82,16 +95,27 @@
                 </a>
             </div>
             @endif
-            @if ($reply->best_answer==0 && Auth::id()==$discussion->user->id)
-                <a href="{{ route('discussion.best_answer',['id'=>$reply->id]) }}" class="ui labeled icon blue button float-right">
+            @if ($reply->best_answer==0)
+            @if (Auth::id()==$discussion->user->id)
+            <a href="{{ route('discussion.best_answer',['id'=>$reply->id]) }}"
+                class="ui labeled icon blue button float-right">
                 <i class="thumbs up icon"></i>
                 Mark as Best
             </a>
-            
+            @endif
+
+            @if (Auth::id() == $reply->user->id)
+            @if ($reply->best_answer==0)
+            <a href="{{ route('reply.edit',['id'=>$reply->id]) }}" class="ui labeled icon olive button float-right">
+                <i class="edit outline icon"></i>
+                Edit Reply
+            </a>
+            @endif
+            @endif
             @else
-                <a class="ui teal tag label float-right">
-                    Marked as Best
-                </a>
+            <a class="ui teal tag label float-right">
+                Marked as Best
+            </a>
             @endif
         </div>
     </div>
@@ -121,9 +145,9 @@
         <div class="header fluid">
             You must Login before you can leave reply
         </div>
-        
-            <a href="{{ route('login') }}" class="ui secondary button mx-5">Login</a>
-        
+
+        <a href="{{ route('login') }}" class="ui secondary button mx-5">Login</a>
+
     </div>
     @endif
 
@@ -150,6 +174,17 @@
     @elseif (Session::has('mark_success'))
     <script>
         toastr.info("{!! Session::get('mark_success') !!}");
+
+    </script>
+
+    @elseif (Session::has('update'))
+    <script>
+        toastr.success("{!! Session::get('update') !!}");
+
+    </script>
+    @elseif (Session::has('reply_edit'))
+    <script>
+        toastr.success('{!! Session::get("reply_edit") !!}');
 
     </script>
     @endif
